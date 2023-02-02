@@ -20,6 +20,16 @@ find_package(OpenMP REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 
+option(COMPILE_PYBIND_MODULES "If turn ON will compile the library interface for python3" OFF)
+if(COMPILE_PYBIND_MODULES)
+
+  find_package(pybind11 REQUIRED)
+  pybind11_add_module(pylbench python/py_laplace_benchmark.cpp)
+  target_link_libraries(pylbench PUBLIC pybind11::module)
+  target_include_directories(pylbench PRIVATE include)
+  target_link_libraries(pylbench PRIVATE laplace_benchmark)
+
+endif()
 
 option(COMPILE_EXAMPLES "Set whether the examples are compiled" OFF)
 if(COMPILE_EXAMPLES)
